@@ -10,15 +10,15 @@ DESC tablename; //查看表结构
 
 ALTER TABLE OLDTABLENAME RENAME NEWTABLENAME; //修改表名
 
-ALERT TABLE TABLENAME MODIFY 属性名 属性类型; //修改表数据类型
+ALTER TABLE TABLENAME MODIFY 属性名 属性类型; //修改表数据类型
 
-ALERT TABEL TABLENAME CHAINED 旧属性名 新属性名  属性类型;//修改表属性名
+ALTER TABEL TABLENAME CHAINED 旧属性名 新属性名  属性类型;//修改表属性名
 
-ALERT TABEL TABLENAME ADD 属性名 属性类型[完整性约束条件] ;//添加表属性
+ALTER TABEL TABLENAME ADD 属性名 属性类型[完整性约束条件] ;//添加表属性
 
-ALERT TABEL TABLENAME DROP 属性名 ; //移除表属性
+ALTER TABEL TABLENAME DROP 属性名 ; //移除表属性
 
-ALERT TABEL TABLENAME DROP FOREIGN KEY 外键别名 ; //删除表外键
+ALTER TABEL TABLENAME DROP FOREIGN KEY 外键别名 ; //删除表外键
 
 DROP TABLENAME ;//删除表
 
@@ -48,7 +48,23 @@ HAVING的使用（用来限制分组以后的条件）（SELECT 分组属性 ,CO
 
 SELECT 属性名1,属性名2,表名.外键属性名,属性名3，属性名4
 FROM 子表名，父表名
-WHERE 从表名.外键属性名=主表名.主键属性
+WHERE 从表名.外键属性名=主表名.主键属性  
+
+CREATE INDEX 索引名 ON 表名 （属性名 ASC/DESC）//创建索引
+
+CREATE INDEX 索引名 ON 表名 （属性名1,属性名2 ASC/DESC）//创建多属性索引
+
+CREATE UNIQUE INDEX 索引名 ON 表名 （属性名 ASC/DESC）//创建单例索引
+
+CREATE SPATIAL INDEX 索引名 ON 表名 （属性名 ASC/DESC）//创建空间索引
+
+CREATE FULLTEXT INDEX 索引名 ON 表名 （属性名 ASC/DESC）//创建全文索引
+
+DROP INDEX 索引名 ON 表名
+
+
+
+
 
 
 
