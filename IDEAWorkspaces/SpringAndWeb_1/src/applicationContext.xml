@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+       <!--       事务处理约束
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       -->
+
+    <!--通过配置文件增强类-->
+    <bean id="test1" class="cn.web.dao.test1"/>
+
+    <bean id="bei" class="cn.web.service.bei_Enhance">
+        <property name="t" ref="test1"/>
+    </bean>
+
+    <bean id="enhance" class="cn.web.service.Enhance"></bean>
+
+    <aop:config>
+        <aop:pointcut id="need" expression="execution(* cn.web.service.bei_Enhance.bei_Enhancefun())"/>
+
+        <aop:aspect ref="enhance">
+            <aop:around method="Engry" pointcut-ref="need"/>
+        </aop:aspect>
+
+    </aop:config>
+
+    <!--通过注解增强类-->
+
+    <!--开启AOP注解扫描-->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+    <!--通过配置创建对象-->
+    <bean id="zjtest1" class="cn.web.dao.Zjtest1"/>
+    <bean id="zjenhance" class="cn.web.service.ZjEnhance"></bean>
+
+    <!--在增强类上面写注解-->
+
+
+
+
+    <!--c3p0连接池的配置 与使用 -->
+
+    <!-- 连接池的配置 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!--
+         这个就等于给c3p0连接池一个  context 地址如果忘记new一个ComboPooledDataSource
+         而这里没用给context 是自己配置
+         -->
+        <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mydb3"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="123"></property>
+    </bean>
+
+    <!--创建service对象和dao对象-->
+
+    <bean id="c3p0" class="cn.web.service.c3p0">
+        <property name="testc3p0" ref="testc3p0"></property>  <!--在service中注入dao对象直接调用-->
+    </bean>
+
+    <bean id="testc3p0" class="cn.web.dao.Testc3p0">
+        <!--把模板注入到 要使用模板的类中  对象注入-->
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <!--
+    配置JDBC模板 把连接池注入到 模板中
+    如果路径忘记可以new 一个JdbcTemplate  得到jar 的路径
+    -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</beans>

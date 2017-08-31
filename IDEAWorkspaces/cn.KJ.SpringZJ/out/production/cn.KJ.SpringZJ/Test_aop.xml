@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--配置类-->
+    <bean id="needbefore" class="cn.KJ.Daomian.needBefore"/>
+    <bean id="before" class="cn.KJ.Daomian.Before"/>
+
+
+<!--
+    <aop:config>  &lt;!&ndash;配置增强类  前置增强&ndash;&gt;
+
+        &lt;!&ndash;配置切入点 所谓切入点就是需要增强的那个类  格式 查看Word文档&ndash;&gt;
+
+        <aop:pointcut id="Ineedbefore" expression="execution(* cn.KJ.Daomian.needBefore.needBeforesay())"/>
+
+        &lt;!&ndash;配置切面 切面就是把要加强的类的方法放到需要加强的那个类的那个方法中 &ndash;&gt;
+
+        <aop:aspect ref="before">   &lt;!&ndash;ref 增强类的位置 就是bean里面配置的ID&ndash;&gt;
+
+            &lt;!&ndash;aop:before前置增强  method 增强类中的方法 就是加入到需要加入的那个类的那个方法中去的那个方法
+
+            pointcut-ref 切入点ID &ndash;&gt;
+
+            <aop:before method="Bforesay" pointcut-ref="Ineedbefore"/>
+
+        </aop:aspect>
+
+    </aop:config>
+-->
+
+
+
+<!--    <aop:config>  &lt;!&ndash;配置增强 后置增强&ndash;&gt;
+
+        <aop:pointcut id="beforesay" expression="execution(* cn.KJ.Daomian.needBefore.needBeforesay())"/>
+
+        <aop:aspect ref="before">
+
+            <aop:after method="afterBforesay" pointcut-ref="beforesay"/>
+
+        </aop:aspect>
+
+    </aop:config>-->
+
+    <aop:config>  <!--配置增强 环绕增强-->
+
+        <aop:pointcut id="needaroundforesay" expression="execution(* cn.KJ.Daomian.needBefore.needBeforesay())"/>
+
+        <aop:aspect ref="before">
+
+            <aop:around method="aroundforesay" pointcut-ref="needaroundforesay"/>
+
+        </aop:aspect>
+
+    </aop:config>
+
+
+
+
+
+
+
+
+
+
+</beans>

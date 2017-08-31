@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Userdao.UserMapper">
+
+    <!--高级查询  多条件组合查询 -->
+
+    <select id="findUserList" parameterType="Daomain.UserQueryVo"
+                               resultType="Daomain.User1Customer">
+  /*调用条件类UserQueryVo里面的属性直接写属性名
+    需要调用USer1里面的可以调用user1的扩展类User1Customer类名点User1的属性名  User1Customer为UserQueryVo的属性  具有set  GET方法
+    使用扩展类User1Customer 的好处   扩展类可以根据查询的列  编写相应的MAP映射到这个JavaBEN 接收参数
+    相当于一个根据查询条件创建的
+    JAVABEAN */
+        SELECT * FROM user1 WHERE user1.sex = #{user1Customer.sex} AND user1.name LIKE '%${user1Customer.name}%'
+
+    </select>
+
+
+
+    <select id="findCount" parameterType="Daomain.UserQueryVo"
+            resultType="int">
+
+        SELECT COUNT(*) FROM user1 WHERE user1.sex = #{user1Customer.sex} AND user1.name LIKE '%${user1Customer.name}%'
+
+    </select>
+
+    <resultMap id="UserMap" type="Daomain.User1">
+        <!--id 主键列使用ID映射  result 查询列使用的映射   property 映射到的类的属性名   column 查询时取的别名  -->
+        <id property="id" column="id_"/>
+        <result property="name" column="name_"/>
+    </resultMap>
+
+
+    <!-- Map作为返回类型进行多条件查询
+         好处：可以指定查询列  编写相应的MAP映射到一个根据查询列建立的JAVA BEN
+     -->
+    <select id="findMap" resultType="Daomain.UserQueryVo"
+            resultMap="UserMap">
+
+        SELECT id id_,name name_ FROM user1 WHERE user1.sex = #{user1Customer.sex} AND user1.name LIKE '%${user1Customer.name}%'
+
+    </select>
+
+
+    <!--拼接式多条件组合查询直接映射类-->
+
+    <select id="findUserlifisql" parameterType="Daomain.UserQueryVo"
+            resultType="Daomain.User1Customer">
+
+    SELECT * FROM user1
+        <where>
+
+            <if test="user1Customer!=null">
+                <if test="user1Customer.sex != null and user1Customer.sex !='' ">
+                    AND  user1.sex = #{user1Customer.sex}
+                </if>
+            </if>
+
+
+            <if test="user1Customer!=null">
+                <if test="user1Customer.name != null and user1Customer.name !='' ">
+                    AND  user1.name LIKE '%${user1Customer.name}%'
+                </if>
+            </if>
+        </where>
+
+    </select>
+
+    <!--拼接式多条件组合查询MAP映射类-->
+
+    <resultMap id="UserLifeMapSql" type="Daomain.User1">
+    <!--id 主键列使用ID映射  result 查询列使用的映射   property 映射到的类的属性名   column 查询时取的别名  -->
+    <id property="id" column="id_1"/>
+    <result property="name" column="name_1"/>
+</resultMap>
+
+    <select id="UserMapSql" resultType="Daomain.UserQueryVo"
+            resultMap="UserLifeMapSql">
+
+        SELECT id id_1,name name_1 FROM user1
+
+        <where>
+
+            <if test="user1Customer!=null">
+
+                <if test="user1Customer.sex != null and user1Customer.sex !='' ">
+                    AND  user1.sex = #{user1Customer.sex}
+                </if>
+
+            </if>
+
+
+
+            <if test="user1Customer!=null">
+
+                <if test="user1Customer.name != null and user1Customer.name !='' ">
+                    AND  user1.name LIKE '%${user1Customer.name}%'
+                </if>
+
+            </if>
+
+        </where>
+
+    </select>
+
+
+    <!--sql片段 可以将条件抽取出来 比如上两个查询的条件是一样的   基于单表定义
+
+        可重用性更高  是这个表的条件我就调用这个sql片段不是就不调用
+
+        使用<include>标签引用sql片段
+    -->
+    <sql id="sql1">
+
+
+
+            <if test="user1Customer!=null">
+
+                <if test="user1Customer.sex != null and user1Customer.sex !='' ">
+                    AND  user1.sex = #{user1Customer.sex}
+                </if>
+
+            </if>
+
+
+
+            <if test="user1Customer!=null">
+
+                <if test="user1Customer.name != null and user1Customer.name !='' ">
+                    AND  user1.name LIKE '%${user1Customer.name}%'
+                </if>
+
+            </if>
+        
+        <if test="ids!=null">
+            
+          <foreach collection="ids" item="item_id" open="AND (" close=")" separator="or">
+              id = #{item_id}
+          </foreach>
+
+        </if>
+
+
+    </sql>
+
+
+    <!--采用SQL片段拼接式多条件组合查询直接映射类-->
+
+    <select id="findUserlifisqlpd" parameterType="Daomain.UserQueryVo"
+            resultType="Daomain.User1Customer">
+
+        SELECT * FROM user1
+        <where>
+
+            <include refid="Userdao.UserMapper.sql1"/>
+
+        </where>
+
+    </select>
+
+
+    <!--采用SQL片段拼接式多条件组合查询MAP映射类-->
+
+    <resultMap id="UserLifeMapSql1" type="Daomain.User1">
+        <!--id 主键列使用ID映射  result 查询列使用的映射   property 映射到的类的属性名   column 查询时取的别名  -->
+        <id property="id" column="id_1"/>
+        <result property="name" column="name_1"/>
+    </resultMap>
+
+    <select id="UserMapSqlpd" resultType="Daomain.UserQueryVo"
+            resultMap="UserLifeMapSql1">
+
+        SELECT id id_1,name name_1 FROM user1
+            <where>
+
+                <include refid="Userdao.UserMapper.sql1"/>
+
+                <!-- 这里还可以引用其他SQL片段-->
+
+
+            </where>
+
+    </select>
+
+    
+
+    <select id="findTest" parameterType="Daomain.Tset2" resultType="Daomain.Tset2">
+
+        SELECT * FROM user1 WHERE sex = #{tset.sex} AND name LIKE '%${tset.name}%'
+
+    </select>
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test">
+    <!--
+
+      这个是原始dao开发的mapper样式
+
+
+    id 将来会封装到Statement中   相当于JDBC中的？
+     parameterType 输入的参数类型，
+     resultType    输出的参数类型  一个JAVA bean
+     #{} 站位符
+     ${} 字符串拼接
+     -->
+    <select id="findUserById" parameterType="int" resultType="Daomain.User">
+    SELECT * FROM USER WHERE id=#{id}
+    </select>
+
+    <!--这样做的缺点   可以SQL注入  -->
+    <select id="findUserByMore" parameterType="String" resultType="Daomain.User">
+        SELECT * FROM  USER WHERE NAME LIKE '%${value}%'
+    </select>
+
+    <!--添加用户注意事项
+
+    parameterType 要改为表所对应的JAVA bean
+
+    占位符中写对应的属性
+
+    USER 后面的可以省略
+    -->
+    <insert id="insertUser" parameterType="Daomain.User">
+
+        INSERT INTO USER (id,name) VALUE (#{id},#{name})
+
+    </insert>
+
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM USER WHERE id=#{id}
+    </delete>
+
+    <!--更新数据库  parameterType 也要设置成 相对应的Javabean-->
+    <update id="updateUser" parameterType="Daomain.User">
+        UPDATE USER SET name=#{name} WHERE id=#{id}
+    </update>
+
+</mapper>

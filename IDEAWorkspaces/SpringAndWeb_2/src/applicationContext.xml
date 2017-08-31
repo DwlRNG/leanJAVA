@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+    <!--基于配置文件实现事务处理  所用到的包 cn.bank下所有包 -->
+
+    <!--配置的到dataSource-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/mydb3"/>
+        <property name="user" value="root"/>
+        <property name="password" value="123"/>
+    </bean>
+
+    <!--配置dao 将属性为jdbcTemplate对象的属性注入-->
+    <bean id="dao" class="cn.bank.dao.dao">
+        <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+
+    </bean>
+
+    <!--  配置jdbcTemplate 将dataSource 注入-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+    <!--配置service  将dao作为属性对象注入到service中-->
+    <bean id="service" class="cn.bank.service.zhuanzhuang">
+
+        <property name="dao" ref="dao"/>
+
+     </bean>
+
+
+    <!--事务管理器  配置方式实现  都需要先配置dataSource-->
+
+    <!--第一步 配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入dataSource让事务管理器知道要对那个数据库进行操作-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--第二步 增强事务管理器  相当于写了一个增强类-->
+    <tx:advice id="interceptor" transaction-manager="transactionManager">
+
+        <!--事务的操作-->
+        <tx:attributes>
+            <!--匹配事务 就是告诉事务哪个方法需要做事务-->
+            <tx:method name="service*"/>
+    </tx:attributes>
+
+    </tx:advice>
+
+    <!--第三步 配置切面 相当于将增强用到切入点中-->
+    <aop:config>
+        <!--配置切入点  具体到方法-->
+        <aop:pointcut id="pointcut" expression="execution(* cn.bank.service.zhuanzhuang.servicezuanzhang())"></aop:pointcut>
+        <!--配置切面  这个切面相当于将第二步的增强用于切入点-->
+        <aop:advisor advice-ref="interceptor" pointcut-ref="pointcut"></aop:advisor>
+    </aop:config>
+
+
+    <!--事务管理器注解方式实现   都需要先配置dataSource-->
+
+    <!--第一步配置事务管理器-->
+    <bean id="transactionManager2" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+
+        <property name="dataSource" ref="dataSource"/>
+
+    </bean>
+
+    <!--第二步开启事务注解扫描-->
+    <tx:annotation-driven transaction-manager="transactionManager2"></tx:annotation-driven>
+    <!--第三步在所要开启事务的类上添加注解  @Transactional -->
+
+</beans>

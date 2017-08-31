@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.bootcss.com/angular.js/1.6.3/angular.min.js"></script>
+    <title>显示服务器上读取的USer封装的JSON串</title>
+</head>
+<body>
+
+<center><h1>显示服务器上读取的USer封装的JSON串</h1></center>
+
+<div ng-app="myApp" ng-controller="siteCtrl">
+
+    <ul>
+        <li ng-repeat="x in names">
+            {{ x.name + ', ' + x.home + ', ' + x.number}}
+            <button>删除</button>
+        </li>
+    </ul>
+
+</div>
+
+<script>
+    var app = angular.module('myApp', []);
+
+    app.controller('siteCtrl', function($scope, $http) {
+        $http({
+            method: 'GET',
+            url: '/AngularJS/Servlet'
+        }).then(function successCallback(response) {
+            $scope.names = response.data;
+        }, function errorCallback(response) {
+            // 请求失败执行代码
+        });
+
+    });
+</script>
+
+</body>
+</html>

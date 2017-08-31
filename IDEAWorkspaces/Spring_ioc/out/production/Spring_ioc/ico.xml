@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--  配置文件 bean 主要的两个属性  ID 与 class 注意要配置类的路径包名点类名-->
+
+    <bean id="user" class="Spring_ioc_user.user"></bean>
+
+    <!--演示属性的注入  使用ste方法  利用property-->
+    <bean id="person" class="Spring_ioc_user.Person">
+        <property name="name" value="川普"></property>
+        <property name="age" value="65"></property>
+        <property name="phone" value="10086"></property>
+    </bean>
+
+    <!-- 演示属性的注入 使用构造方法 利用constructor-arg属性注入 -->
+
+    <bean id="person2" class="Spring_ioc_user.Person">
+        <constructor-arg name="name" value="希拉里"></constructor-arg>
+        <constructor-arg name="age" value="15"></constructor-arg>
+        <constructor-arg name="phone" value="1008611"></constructor-arg>
+    </bean>
+
+    <!-- 演示注入对象属性 利用set  让一个类中的 属性是另外一个类   将这个属性值利用在类中就可以调用成为属性的那个类的方法了-->
+    <!--配置 要调用的类  与成为 要调用的类的属性的那个类 -->
+    <bean id="daoperson" class="dao.daoperson"></bean>
+    <bean id="service" class="service.service">
+        <!-- property 中要注入的是对象 所以 后面是ref 跟上 bean中配置的那个类  也就是成为一个类对象的那个类 -->
+        <property name="daoperson" ref="daoperson"></property>
+
+    </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- 通过静态工厂创建的类的对象  通过静态工厂Factory.Factory_User2  中的destroy-method="getUser2"方法 得到类对象-->
+    <!--<bean id="User2" class="Factory.Factory_User2" destroy-method="getUser2"></bean>-->
+
+
+
+</beans>

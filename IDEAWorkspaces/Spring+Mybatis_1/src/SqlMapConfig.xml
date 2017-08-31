@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC
+        "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <mappers>
+        <mapper resource="Mapper.xml"/>
+
+        <!--使用扫描的方式实现Mapper不用在这里进行再次扫描  例：user1Mapper就不用扫描-->
+    </mappers>
+
+
+
+</configuration>

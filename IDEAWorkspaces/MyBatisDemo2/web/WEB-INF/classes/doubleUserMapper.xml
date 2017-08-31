@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Userdao.doubleUserMapper">
+
+    <!--sql 片段  可以把每一个表中的每一个属性都作为判断条件-->
+    <sql id="doublesql">
+
+        <if test="doublepojoCustomer!=null">
+
+            <if test="doublepojoCustomer.id != null and doublepojoCustomer.id !=''">
+                AND u.id=#{doublepojoCustomer.id}
+            </if>
+
+        </if>
+
+        <if test="doublepojoCustomer!=null">
+
+            <if test="doublepojoCustomer.city != null and doublepojoCustomer.city !=''">
+                AND h.city=#{doublepojoCustomer.city}
+            </if>
+
+        </if>
+
+        <if test="doublepojoCustomer!=null">
+
+            <if test="doublepojoCustomer.sex != null and doublepojoCustomer.sex !=''">
+                AND u.sex=#{doublepojoCustomer.sex}
+            </if>
+
+        </if>
+
+    </sql>
+
+
+    <!--sex表SQL-->
+    <sql id="sexsql">
+        AND u.sex = s.id
+    </sql>
+
+    <!--home表sql-->
+    <sql id="homesql">
+       AND u.home=h.id
+    </sql>
+
+    <!--map -->
+
+    <resultMap id="findRightCityForUserMap" type="Daomain.doublepojoCustomer">
+
+        <id property="id" column="id_2"/>
+        <result property="name" column="name_2"/>
+        <result property="city" column="city_2"/>
+        <result property="sex_sex" column="sex_2"/>
+
+    </resultMap>
+
+    <!--动态SQL片段多表连接查询使用MAP映射-->
+
+    
+    <select id="findRightCityForUser" parameterType="Daomain.doublepojo" resultMap="findRightCityForUserMap">
+
+        SELECT u.id id_2,u.name name_2,h.city city_2,s.sex_sex sex_2 FROM user1 u ,home h,sex s
+
+        <where>
+
+            <include refid="Userdao.doubleUserMapper.sexsql"/>
+            <include refid="Userdao.doubleUserMapper.homesql"/>
+            <include refid="Userdao.doubleUserMapper.doublesql"/>
+
+        </where>
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+
+Mapper代理开发dao
+
+1.mapper namespace  必须等于mapper接口的地址
+
+2.UserMapper接口中的规则
+
+-->
+<mapper namespace="Mapper.UserMapper">
+
+    <select id="findUserById" parameterType="int" resultType="Daomain.User">
+        SELECT * FROM USER WHERE id=#{id}
+    </select>
+
+    <!--这样做的缺点   可以SQL注入  -->
+    <select id="findUserByMore" parameterType="String" resultType="Daomain.User">
+        SELECT * FROM  USER WHERE NAME LIKE '%${value}%'
+    </select>
+
+    <!--添加用户注意事项
+
+    parameterType 要改为表所对应的JAVA bean
+
+    占位符中写对应的属性
+
+    USER 后面的可以省略
+    -->
+    <insert id="insertUser" parameterType="Daomain.User">
+
+        INSERT INTO user (id,name) VALUE (#{id},#{name})
+
+    </insert>
+
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM USER WHERE id=#{id}
+    </delete>
+
+    <!--更新数据库  parameterType 也要设置成 相对应的Javabean-->
+    <update id="updateUser" parameterType="Daomain.User">
+        UPDATE USER SET name=#{name} WHERE id=#{id}
+    </update>
+
+
+
+
+</mapper>

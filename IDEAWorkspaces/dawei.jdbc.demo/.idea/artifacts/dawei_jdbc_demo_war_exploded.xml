@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="dawei.jdbc.demo:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/dawei_jdbc_demo_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="dawei.jdbc.demo/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="dawei.jdbc.demo" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
